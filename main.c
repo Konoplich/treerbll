@@ -9,10 +9,10 @@ void ins(PTREE, int key, char *val)
     insert(*p_tree, v1);
 }
 
+
 int main(int argc, char** argv)
 {
-    
-    TREE;
+     TREE;
     bool res = new(&p_tree);
     printf("p_tree-%p\n", p_tree);
     if(false == res)
@@ -25,7 +25,12 @@ int main(int argc, char** argv)
     ins(&p_tree, 2, "2");
     ins(&p_tree, 3, "3");
     ins(&p_tree, 4, "4");
+    print(p_tree);
+    leaf_depth(p_tree);
+
     ins(&p_tree, 5, "5");
+    print(p_tree);
+    leaf_depth(p_tree);
     print(p_tree);
     printf("2,5,6,9,4,10\n");
     ins(&p_tree, 2, "2");

@@ -120,7 +120,8 @@ static inline bool node_is_red(ROOT)
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Delete()
-//
+//сверка с https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
+//не совпала
 void delete(TREE, const u_int32_t key)
 {
 	if (NULL == p_tree->data) {
@@ -497,17 +498,21 @@ u_int32_t key_count(TREE)
 //
 u_int32_t leaf_depth_rec(ROOT, u_int32_t depth, u_int32_t ary[], u_int32_t depthLimit, u_int32_t blackDepth, u_int32_t *minBlack, u_int32_t *maxBlack)
 {
+    p("enter %p[%p,%p] depth %d blackDepth %d\n",p_root,p_root->p_child[0],p_root->p_child[1], depth, blackDepth)
 	// Increment the count of nodes at the current depth of the tree.
 	ary[depth] += 1;
-
-	// If this is a black node, increment the count of black nodes along
-	// this path from the root.
+   // p("current count: %d\n",ary[depth]);
+    //  Если это черный узел, увеличьте количество черных узлов на этом пути, начиная с корня.
 	if (false == p_root->is_red) {
+        //p("inc blackDepth\n")
 		++blackDepth;
 	}
 
-	// If this is a leaf node, return the total depth of this node.
+    //Если это листовой узел, верните общую глубину этого узла. 
 	if ((NULL == p_root->p_child[0]) && (NULL == p_root->p_child[1])) {
+        //p("leaf depth %d\n\n", depth)
+        *minBlack = Min((u_int32_t)(*minBlack), (u_int32_t)blackDepth);
+		*maxBlack = Max((u_int32_t)(*maxBlack), (u_int32_t)blackDepth);
 		return depth + 1;
 	}
 
@@ -522,23 +527,45 @@ u_int32_t leaf_depth_rec(ROOT, u_int32_t depth, u_int32_t ary[], u_int32_t depth
 	u_int32_t d1 = 0;
 	u_int32_t d2 = 0;
 
+    //p("child1\n");
 	if (NULL != p_root->p_child[0]) {
+       	//p("in: %p leaf_depth_rec(%p, %d, %p, %d, %d, %d, %d)\n",p_root,
+		//    p_root->p_child[0], depth + 1, ary, depthLimit, blackDepth, *minBlack, *maxBlack
+        //        );
+
 		d1 = leaf_depth_rec(p_root->p_child[0], depth + 1, ary, depthLimit, blackDepth, minBlack, maxBlack);
+		//p("out: %p d1: %d = leaf_depth_rec(%p, %d, %p, %d, %d, %d, %d)\n",p_root,d1,
+		//    p_root->p_child[0], depth + 1, ary, depthLimit, blackDepth, *minBlack, *maxBlack
+        //        );
 	}
 	else {
-		*minBlack = Min(*minBlack, blackDepth);
-		*maxBlack = Max(*maxBlack, blackDepth);
-	}
+        //p("!\n");
+        //p("in: minBlack %d maxBlack %d blackdepth %d ",*minBlack, *maxBlack, blackDepth);
+		*minBlack = Min((u_int32_t)(*minBlack), (u_int32_t)blackDepth);
+		*maxBlack = Max((u_int32_t)(*maxBlack), (u_int32_t)blackDepth);
+        p("out: minBlack %d maxBlack %d\n",*minBlack, *maxBlack);
 
+	}
+    //p("child2\n");
 	if (NULL != p_root->p_child[1]) {
-		d2 = leaf_depth_rec(p_root->p_child[1], depth + 1, ary, depthLimit, blackDepth, minBlack, maxBlack);
-	}
+	    //p("in: %p leaf_depth_rec(%p, %d, %p, %d, %d, %d, %d)\n",p_root, 
+		//    p_root->p_child[1], depth + 1, ary, depthLimit, blackDepth, *minBlack, *maxBlack
+        //        );
+        d2 = leaf_depth_rec(p_root->p_child[1], depth + 1, ary, depthLimit, blackDepth, minBlack, maxBlack);
+	    //p("out: %p d2: %d = leaf_depth_rec(%p, %d, %p, %d, %d, %d, %d)\n",p_root, d2,
+		//    p_root->p_child[1], depth + 1, ary, depthLimit, blackDepth, *minBlack, *maxBlack
+        //        );
+
+    }
 	else {
-		*minBlack = Min(*minBlack, blackDepth);
-		*maxBlack = Max(*maxBlack, blackDepth);
+        //p("!\n");
+		*minBlack = Min((u_int32_t)(*minBlack), (u_int32_t)blackDepth);
+		*maxBlack = Max((u_int32_t)(*maxBlack), (u_int32_t)blackDepth);
+        p("out: minBlack %d maxBlack %d\n",*minBlack, *maxBlack);
 	}
 
-	// Return the maximum node depth found along this path from the root.
+    //Возвращает максимальную глубину узла, найденную на этом пути от корня. 
+    p("%p ret: Max: %d d1: %d, d2: %d\n\n",p_root, Max(d1,d2), d1,d2);
 	return Max(d1, d2);
 }
 
@@ -546,15 +573,8 @@ u_int32_t leaf_depth_rec(ROOT, u_int32_t depth, u_int32_t ary[], u_int32_t depth
 //
 //	LeafDepth()
 //
-//	Tests the "black depth" of every leaf node.  This measure is the number
-//	of black nodes between each leaf and the root (including the root, since
-//	the root of a red-black tree must be black).  The tree depth of every
-//	leaf node will be greater, since red nodes are not included in this
-//	measure.
-//
-//	Once complete, it will report the minimum and maximum number of black
-//	nodes found for each leaf.  Due to the nature of a red-black tree, these
-//	two values must be the same.
+// Проверяет "глубину черного" каждого узла листа.  Эта мера представляет собой количество  чёрных узлов между каждым листом и корнем (включая корень, так как   так как корень красно-черного дерева должен быть черным).  Глубина дерева для каждого   листового узла будет больше, так как красные узлы не учитываются в этом   измерение.
+//    По окончании работы будет сообщено минимальное и максимальное количество черных    узлов, найденных для каждого листа.  В силу природы красно-черного дерева эти   эти два значения должны быть одинаковыми.
 //
 void leaf_depth(TREE)
 {
@@ -577,16 +597,18 @@ void leaf_depth(TREE)
 	u_int32_t tally = 0;
 
 	for (u_int32_t i = 0; i < maxDepth; ++i) {
-		tally += ary[i];
+		tally += ary[i]; //подсчеты
 
 		printf("%3d: %5d = %5d\n", i, ary[i], tally);
 	}
 
 	printf("black depth: %d to %d\n", minBlack, maxBlack);
 
-	// All leaf nodes must have the same number of black nodes between the
-	// root and each leaf.  Therefore the minimum and maximum number of black
-	// nodes must be the same.
+/*
+    Все узлы листьев должны иметь одинаковое количество черных узлов между
+  корнем и каждым листом.  Поэтому минимальное и максимальное количество черных
+ узлов должно быть одинаковым.
+ */
 	printf("%d %s\n",__LINE__,(minBlack == maxBlack)?"ok":"assert");
 }
 
@@ -594,17 +616,20 @@ void leaf_depth(TREE)
 //
 //	TraverseRec()
 //
-void traverse_rec(ROOT, u_int32_t *prev)
+//void traverse_rec(ROOT, u_int32_t *prev)
+void traverse_rec(ROOT)
 {
-	if (NULL != p_root->p_child[0]) {
-		traverse_rec(p_root->p_child[0], prev);
+    if (NULL != p_root->p_child[0]) {
+		//traverse_rec(p_root->p_child[0], prev);
+		traverse_rec(p_root->p_child[0]);
 	}
 
-	*prev = p_root->ref.key;
+	//*prev = p_root->ref.key;
 	printf("%4d", p_root->ref.key);
 
 	if (NULL != p_root->p_child[1]) {
-		traverse_rec(p_root->p_child[1], prev);
+		//traverse_rec(p_root->p_child[1], prev);
+		traverse_rec(p_root->p_child[1]);
 	}
 }
 
@@ -618,8 +643,9 @@ void traverse_rec(ROOT, u_int32_t *prev)
 void traverse(TREE)
 {
 	if (NULL != p_tree->data) {
-		u_int32_t prev = 0;
-		traverse_rec(p_tree->data, &prev);
+		//u_int32_t prev = 0;
+		//traverse_rec(p_tree->data, &prev);
+		traverse_rec(p_tree->data);
 		printf("\n\n");
 	}
 }

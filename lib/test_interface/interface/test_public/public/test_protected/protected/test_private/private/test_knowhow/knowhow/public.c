@@ -43,7 +43,7 @@ void destructor(PTREE)
 void print_rec(ROOT, char* end, char* start)
 {
     char *pr = (end-3<start)?"...":end-3;
-    printf("%s %p color: %s, [%d-%s]\n", pr,  p_root, (p_root->is_red)?"red":"black", p_root->ref.key, (char*)p_root->ref.p_context);
+    printf("%s %p color: %5s, [%d-%s]\n", pr,  p_root, (p_root->is_red)?"red":"black", p_root->ref.key, (char*)p_root->ref.p_context);
     if(NULL != p_root->p_child[0])
         print_rec(p_root->p_child[0], pr, start);
     if(NULL != p_root->p_child[1])
