@@ -1,10 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-<<<<<<< HEAD
 #include <libtreerbll.h>
-=======
-#include <libtreerbb.h>
->>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
 #include <stdbool.h>
 
 void ins(PTREE, int key, char *val)
@@ -24,22 +20,14 @@ int main(int argc, char** argv)
         printf("error 1\n");
 	    exit(1);
     }
-<<<<<<< HEAD
     printf("1,2,3,4\n");
-=======
-    printf("1,2,3,4,5\n");
->>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
     ins(&p_tree, 1, "1");
     ins(&p_tree, 2, "2");
     ins(&p_tree, 3, "3");
     ins(&p_tree, 4, "4");
     print(p_tree);
     leaf_depth(p_tree);
-<<<<<<< HEAD
     printf("5\n");
-=======
-
->>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
     ins(&p_tree, 5, "5");
     print(p_tree);
     leaf_depth(p_tree);
