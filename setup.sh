@@ -1,7 +1,11 @@
 #!/bin/bash
 
 #link lib name
+<<<<<<< HEAD
 LN=treerbll
+=======
+LN=treerbb
+>>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
 
 #lib name
 L=lib"${LN}"

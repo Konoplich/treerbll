@@ -8,10 +8,17 @@
 
 bool new(PTREE)
 {
+<<<<<<< HEAD
     *p_tree = malloc(sizeof(treerbll_t));
     if(NULL !=*p_tree)
     {
         memset(*p_tree, 0, sizeof(treerbll_t));
+=======
+    *p_tree = malloc(sizeof(treerbb_t));
+    if(NULL !=*p_tree)
+    {
+        memset(*p_tree, 0, sizeof(treerbb_t));
+>>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
         return true;
     }
     return false;
@@ -21,16 +28,25 @@ void free_node(ROOT)
 {
     p("free node %p\n", p_root);
 	if (NULL != p_root) {
+<<<<<<< HEAD
 		if (NULL != p_root->p_left) {
 			free_node(p_root->p_left);
 		}
 		if (NULL != p_root->p_right) {
 			free_node(p_root->p_right);
+=======
+		if (NULL != p_root->p_child[0]) {
+			free_node(p_root->p_child[0]);
+		}
+		if (NULL != p_root->p_child[1]) {
+			free_node(p_root->p_child[1]);
+>>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
 		}
 		SafeDelete(p_root);
 	}
 }
 
+<<<<<<< HEAD
 node_t* new_node(void)
 {
 	node_t *pNew = malloc(sizeof(node_t));
@@ -44,6 +60,8 @@ node_t* new_node(void)
 	return pNew;
 }
 
+=======
+>>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
 void destructor(PTREE)
 {
     p("destructor enter\n");
@@ -57,10 +75,17 @@ void print_rec(ROOT, char* end, char* start)
 {
     char *pr = (end-3<start)?"...":end-3;
     printf("%s %p color: %5s, [%d-%s]\n", pr,  p_root, (p_root->is_red)?"red":"black", p_root->ref.key, (char*)p_root->ref.p_context);
+<<<<<<< HEAD
     if(NULL != p_root->p_left)
         print_rec(p_root->p_left, pr, start);
     if(NULL != p_root->p_right)
         print_rec(p_root->p_right, pr, start);
+=======
+    if(NULL != p_root->p_child[0])
+        print_rec(p_root->p_child[0], pr, start);
+    if(NULL != p_root->p_child[1])
+        print_rec(p_root->p_child[1], pr, start);
+>>>>>>> c2b30911f5674b6830f4dcc37247ff9f9509902b
 }
 
 void print(TREE)
